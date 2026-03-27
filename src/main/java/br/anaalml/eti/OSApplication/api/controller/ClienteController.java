@@ -4,8 +4,14 @@
  */
 package br.anaalml.eti.OSApplication.api.controller;
 
+import br.anaalml.eti.OSApplication.domain.service.ClienteService;
 import br.anaalml.eti.OSApplication.domain.model.Cliente;
 import br.anaalml.eti.OSApplication.domain.repository.ClienteRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +35,29 @@ public class ClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    
+    @Autowired
+    private ClienteService clienteService;
+    
+
 
     @GetMapping("/clientes")
+        @Operation(summary = "Lista os produtos pelo ID", description = "Retorna cada produto com base no seu proprio ID")
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved"), 
+        @ApiResponse(responseCode = "404", description = "Not found - Não foi encontrado")
+ })
     public List<Cliente> listar() {
         return clienteRepository.findAll();
     }
     
     @GetMapping("/clientes/{clienteID}")
+    @Parameter(name = "id", description = "Product id", example = "1")
+    @Operation(summary = "Lista os clientes pelo ID", description = "Retorna cada cliente com base no seu proprio ID")
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved"), 
+        @ApiResponse(responseCode = "404", description = "Not found - Não foi encontrado")
+ })
     public ResponseEntity<Cliente> buscar (@PathVariable Long ClienteID) {
         Optional<Cliente> cliente = clienteRepository.findById(ClienteID);
 
@@ -49,19 +71,19 @@ public class ClienteController {
     
     @PostMapping("/clientes")
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente adicionar(@RequestBody Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
+        return clienteService.salvar(cliente);
     }
     
     @PutMapping("/clientes/{clienteID}") 
-    public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteID,
+    public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteID,
             @RequestBody Cliente cliente){
         if(!clienteRepository.existsById(clienteID)){
             return ResponseEntity.notFound().build();
             
         }
         cliente.setId(clienteID);
-        cliente = clienteRepository.save(cliente);
+        cliente = clienteService.salvar(cliente);
         return ResponseEntity.ok(cliente);
     }
     
@@ -74,9 +96,10 @@ public class ClienteController {
             
         }
        
-       clienteRepository.deleteById(clienteID);
+       clienteService.excluir(clienteID);
         return ResponseEntity.noContent().build();
     }
     
     
+
 }

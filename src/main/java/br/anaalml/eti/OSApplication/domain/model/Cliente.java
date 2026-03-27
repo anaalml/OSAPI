@@ -4,11 +4,15 @@
  */
 package br.anaalml.eti.OSApplication.domain.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  *
@@ -19,13 +23,28 @@ public class Cliente {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(name = " ID produto ", example = "1", required = true)
+
     
     
     private long id;
+    
+    @NotBlank
+    @Size(max = 60)
+    @Schema(name = "nome", example = "ana luiza", required = true)
+
     private String nome;
+    
+    @NotBlank
+    @Email
+    @Size(max = 255)
+    @Schema(name = "email", example = "ana@hotmail.com", required = true)
+
     private String email;
     
-    
+    @NotBlank
+    @Size(max = 20)
+    @Schema(name = "telefone", example = "(11)99392-5743", required = true)
     @Column(name = "telefone")
     private String fone;
     

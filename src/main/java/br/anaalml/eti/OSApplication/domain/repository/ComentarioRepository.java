@@ -4,21 +4,18 @@
  */
 package br.anaalml.eti.OSApplication.domain.repository;
 
-import br.anaalml.eti.OSApplication.domain.model.Cliente;
+import br.anaalml.eti.OSApplication.domain.model.Comentario;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author sesi3dia
  */
-@Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+public interface ComentarioRepository {
     
-    List<Cliente> findByNome(String nome);
-    List<Cliente> findByNomeContaining(String nome);
-    Cliente findByEmail(String email);
-    
+//    List<Comentario> findByDescricaoContaining (String descricao);
+//    List<Comentario> findByDataEnvio (LocalDateTime dataEnvio);
     
 }
